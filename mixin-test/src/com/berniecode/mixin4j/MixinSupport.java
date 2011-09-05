@@ -1,6 +1,7 @@
 package com.berniecode.mixin4j;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,7 @@ public class MixinSupport implements MixinEngine {
 			List<Mixin<C>> mixins = new ArrayList<Mixin<C>>();
 			
 			// for each parameterised interface implemented by the type
-			for (Class<?> mixinType: mixinBase.getInterfaces()) {
+			for (Class<?> mixinType: getInterfaces(mixinBase)) {
 				
 				Class<?> mixinImpl = null;
 				
@@ -135,6 +136,7 @@ public class MixinSupport implements MixinEngine {
 		}
 		return factory;
 	}
+	
 
 	/**
 	 * Check that a mixin base class is valid and return its {@link MixinBase} annotation.
@@ -146,6 +148,16 @@ public class MixinSupport implements MixinEngine {
 					+ "' is not a mixin base class (not annotated @MixinBase)");
 		}
 		return annotation;
+	}
+	
+	public static List<Class<?>> getInterfaces(final Class<?> clazz) {
+	    Class<?> c = clazz;
+	    List<Class<?>> result = new ArrayList<Class<?>>();
+	    while (c != null) {
+	        result.addAll(Arrays.asList(c.getInterfaces()));
+	        c = c.getSuperclass();
+	    }
+	    return result;
 	}
 
 }
